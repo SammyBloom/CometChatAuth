@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CometChatAuth</string>
+    <string name="enter_uid">Enter Unique Identifier</string>
+    <string name="enter_name">Enter Name</string>
+</resources>
