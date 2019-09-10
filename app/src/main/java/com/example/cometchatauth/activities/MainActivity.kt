@@ -17,14 +17,15 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
+    val appId:String = "7425cd0fd61f16"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
 //        Initialize the comet library
-        val appID:String="7425cd0fd61f16"
 
-        CometChat.init(this,appID, object : CometChat.CallbackListener<String>() {
+        CometChat.init(this,appId, object : CometChat.CallbackListener<String>() {
             override fun onSuccess(p0: String?) {
                 Log.d("TAG", "Initialization completed successfully")
             }
@@ -52,21 +53,24 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            RetrofitClient.instance.createUser(uid, name)
-                .enqueue(object: Callback<DefaultResponse>{
-                    override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+            val apiKey:String= "439bf4ba468d430195869924b381eef3bc109746"
 
-                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+            RetrofitClient.instance.createUser(appId, apiKey, uid, name)
+                .enqueue(object : Callback<DefaultResponse>{
+                    override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                        Toast.makeText(applicationContext, t.message , Toast.LENGTH_LONG).show()
                     }
 
-                    override fun onResponse(call: Call<DefaultResponse>, response: Response<DefaultResponse>) {
-
+                    override fun onResponse(
+                        call: Call<DefaultResponse>,
+                        response: Response<DefaultResponse>
+                    ) {
                         if (response.code() == 200){
                             Toast.makeText(applicationContext, "Created Successfully", Toast.LENGTH_LONG).show()
                             val intent = Intent(applicationContext, LoginActivity::class.java)
                             startActivity(intent)
                         } else{
-                            Toast.makeText(applicationContext, "Unsuccessful", Toast.LENGTH_LONG).show()
+                            Toast.makeText(applicationContext, response.errorBody().toString(), Toast.LENGTH_LONG).show()
                         }
                     }
                 })
